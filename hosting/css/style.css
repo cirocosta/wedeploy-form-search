@@ -17,6 +17,52 @@ body {
 	overflow: hidden;
 }
 
+.we--feedback {
+	position: absolute;
+	background: #0e141a;
+	height: 100vh;
+	flex-direction: column;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	left: 0;
+	transform: translateX(100%);
+	visibility: hidden;
+	transition: all linear .5s;
+}
+
+.we--feedback h2{
+	font-family: 'Galano Bold', sans-serif;
+	text-decoration: none;
+	font-size: 4rem;
+	color: #00d46a;
+}
+
+.we--feedback h2 ~ a {
+	color: #fff;
+	font-size: 1rem;
+	text-decoration: underline;
+}
+
+.we--loading .form--we--steps--container {
+	transform: translateY(-16rem) translateX(129px) scale(1.4);
+}
+
+.we--hide--fields {
+	opacity: 0;
+}
+
+.we--hide {
+	transform: translateX(-100%);
+	visibility: hidden;
+}
+
+.we--show {
+	transform: translateX(0);
+	visibility: visible;
+}
+
 .form--we {
 	color: #00d46a;
 	background: #0e141a;
@@ -24,7 +70,7 @@ body {
 	align-items: center;
 	justify-content: center;
 	height: 100vh;
-	transition: background linear .5s;
+	transition: all linear .5s;
 }
 
 .form--we.form--we--revision {
@@ -63,6 +109,7 @@ body {
 	font-size: 1rem;
 	max-width: 38rem;
 	margin: 0 auto;
+	transition: ease-out .5s transform;
 }
 
 .we--steps {
