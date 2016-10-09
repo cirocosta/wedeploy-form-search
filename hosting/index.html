@@ -7,6 +7,15 @@
 	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+	<section class="we--feedback">
+		<h2>Thank you!</h2>
+		<a href="#">See all the opinions</a>
+
+		<footer>
+			<a href="http://www.wedeploy.com" target="_blank">WeDeploy™</a>
+		</footer>
+	</section>
+
 	<form action="#" class="form--we">
 		<div class="form--we--container">
 			<div class="form--we--panel we--panel--active">
@@ -22,8 +31,8 @@
 			</div>
 
 			<div class="form--we--panel">
-				<input type="text" id="we-email-address">
-				<label for="we-email-address">Where do you work?</label>
+				<input type="text" id="we-work-place">
+				<label for="we-work-place">Where do you work?</label>
 				<span class="form--we--line"></span>
 			</div>
 
@@ -44,9 +53,10 @@
 		</footer>
 	</form>
 
-
+	<script src="http://cdn.wedeploy.com/api/latest/wedeploy.js"></script>
 	<script type="text/javascript">
-		var nodes = document.querySelectorAll("input"),
+		var data = WeDeploy.data('http://serach-database.form-search.wedeploy.io/'),
+			nodes = document.querySelectorAll("input"),
 			btn = document.querySelector('.fm--we--button--panels');
 
 		var formActions = {
@@ -56,17 +66,10 @@
 				var activePanel = document.querySelector('.we--panel--active');
 
 				if(activePanel){
-					var input = activePanel.querySelector('input'),
-						steps = document.querySelector('.we--steps').dataset.steps,
+					var steps = document.querySelector('.we--steps').dataset.steps,
 						nextStep = activePanel.nextElementSibling.nextElementSibling;
 
-					if(!input.value){
-						activePanel.classList.add('we-input-error');
-					}else {
-						activePanel.classList.remove('we-input-error');
-						activePanel.classList.remove('we--panel--active');
-						activePanel.classList.add('we--prev--panel');
-
+					if(!checkField(activePanel)){
 						document.querySelector('.we--steps').dataset.steps = parseInt(steps) + 1;
 						document.querySelector('.form--we--steps--container span').innerHTML = parseInt(steps) + 1;
 
@@ -78,7 +81,7 @@
 						}
 					}
 				}else {
-					return alert('Enviar formulario para o wedeploy!')
+					return formActions.saveData()
 				}
 			},
 
@@ -94,7 +97,55 @@
 
 				document.querySelector('.form--we').classList.add('form--we--revision');
 				document.querySelector('.fm--we--button--panels').innerHTML = "Submit"
+			},
+
+			saveData: function(){
+				var err, panel;
+				Array.prototype.forEach.call(nodes, function(e, index){
+					panel = document.querySelector('.we--revision--panel:nth-child('+(index+1)+')');
+
+					if(checkField(panel)){
+						err = true;
+					}
+				})
+
+				if(!err){
+					document.querySelector('.form--we .form--we--steps--container p').innerHTML = "Sending opinion...";
+					document.querySelector('.form--we').classList.add('we--loading');
+					Array.prototype.forEach.call(nodes, function(e, index){
+						panel = document.querySelector('.we--revision--panel:nth-child('+(index+1)+')');;
+						panel.classList.add('we--hide--fields');
+					})
+
+					data.create('movies', {
+						"name": document.querySelector('#we-name').value,
+						"occupation": document.querySelector('#we-occupation').value,
+						"work_place":  document.querySelector('#we-work-place').value
+					}).then(function(movie) {
+						document.querySelector('.form--we').classList.add('we--hide');
+						document.querySelector('.we--feedback').classList.add('we--show');
+					});
+				}
 			}
+		}
+
+		function checkField(activePanel){
+			var input = activePanel.querySelector('input'),
+				err;
+
+			if(input.value){
+				activePanel.classList.remove('we-input-error');
+				activePanel.classList.remove('we--panel--active');
+			}else {
+				activePanel.classList.add('we-input-error');
+				err = true;
+			}
+
+			if(input.value && activePanel.classList.contains('form--we--panel')){
+				activePanel.classList.add('we--prev--panel');
+			}
+
+			return err;
 		}
 
 		function addIptClass(e){
@@ -107,8 +158,8 @@
 
 			if(document.querySelector('.form--we--panel') && !element.value){
 				element.classList.remove('we--input--focused');
-			}else if(document.querySelector('.form--we--panel')){
-				document.querySelector('.we--panel--active').classList.remove('we-input-error');
+			}else if(document.querySelector('.we-input-error')){
+				document.querySelector('.we-input-error').classList.remove('we-input-error');
 			}
 		}
 
