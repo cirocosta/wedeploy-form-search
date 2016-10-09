@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>We - Search</title>
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+	<form action="#" class="form--we">
+		<div class="form--we--container">
+			<div class="form--we--panel we--panel--active">
+				<input type="text" id="we-name">
+				<label for="we-name">What's your name?</label>
+				<span class="form--we--line"></span>
+			</div>
+
+			<div class="form--we--panel">
+				<input type="text" id="we-occupation">
+				<label for="we-occupation">What's your occupation?</label>
+				<span class="form--we--line"></span>
+			</div>
+
+			<div class="form--we--panel">
+				<input type="text" id="we-email-address">
+				<label for="we-email-address">Where do you work?</label>
+				<span class="form--we--line"></span>
+			</div>
+
+			<div class="form--we--steps--container">
+				<p>Form steps status: <span>1</span>/4</p>
+				<p class="we--steps" data-steps="1">
+					<span></span>
+				</p>
+			</div>
+		</div>
+
+		<button class="fm--we--button--panels">
+			Continue
+		</button>
+
+		<footer>
+			<a href="http://www.wedeploy.com" target="_blank">WeDeploy™</a>
+		</footer>
+	</form>
+
+
+	<script type="text/javascript">
+		var nodes = document.querySelectorAll("input"),
+			btn = document.querySelector('.fm--we--button--panels');
+
+		var formActions = {
+			next: function(e){
+				e.preventDefault();
+
+				var activePanel = document.querySelector('.we--panel--active');
+
+				if(activePanel){
+					var input = activePanel.querySelector('input'),
+						steps = document.querySelector('.we--steps').dataset.steps,
+						nextStep = activePanel.nextElementSibling.nextElementSibling;
+
+					if(!input.value){
+						activePanel.classList.add('we-input-error');
+					}else {
+						activePanel.classList.remove('we-input-error');
+						activePanel.classList.remove('we--panel--active');
+						activePanel.classList.add('we--prev--panel');
+
+						document.querySelector('.we--steps').dataset.steps = parseInt(steps) + 1;
+						document.querySelector('.form--we--steps--container span').innerHTML = parseInt(steps) + 1;
+
+
+						if(nextStep){
+							activePanel.nextElementSibling.classList.add('we--panel--active');
+						}else {
+							return formActions.review();
+						}
+					}
+				}else {
+					return alert('Enviar formulario para o wedeploy!')
+				}
+			},
+
+			review: function(){
+				var node;
+				Array.prototype.forEach.call(nodes, function(ipt, index){
+					node = document.querySelector('.form--we--panel:nth-child('+(index+1)+')');
+
+					node.classList.remove('form--we--panel');
+					node.classList.remove('we--prev--panel');
+					node.classList.add('we--revision--panel');
+				});
+
+				document.querySelector('.form--we').classList.add('form--we--revision');
+				document.querySelector('.fm--we--button--panels').innerHTML = "Submit"
+			}
+		}
+
+		function addIptClass(e){
+			var element = this;
+			element.classList.add('we--input--focused');
+		}
+
+		function changeIptClass(e){
+			var element = this;
+
+			if(document.querySelector('.form--we--panel') && !element.value){
+				element.classList.remove('we--input--focused');
+			}else if(document.querySelector('.form--we--panel')){
+				document.querySelector('.we--panel--active').classList.remove('we-input-error');
+			}
+		}
+
+		Array.prototype.forEach.call(nodes, function(ipt){
+			ipt.addEventListener('focus', addIptClass);
+			ipt.addEventListener('blur', changeIptClass);
+		});
+
+		btn.addEventListener('click', formActions.next);
+	</script>
+</body>
+</html>
