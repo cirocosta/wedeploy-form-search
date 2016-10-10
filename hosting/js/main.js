@@ -76,7 +76,7 @@ function checkField(activePanel){
 	var input = activePanel.querySelector('input'),
 		err;
 
-	if(input.value){
+	if(input.value.trim()){
 		activePanel.classList.remove('we-input-error');
 		activePanel.classList.remove('we--panel--active');
 	}else {
