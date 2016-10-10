@@ -84,7 +84,7 @@ function checkField(activePanel){
 		err = true;
 	}
 
-	if(input.value && activePanel.classList.contains('form--we--panel')){
+	if(input.value.trim() && activePanel.classList.contains('form--we--panel')){
 		activePanel.classList.add('we--prev--panel');
 	}
 
