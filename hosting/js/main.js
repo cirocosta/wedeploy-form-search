@@ -1,6 +1,8 @@
-var data = WeDeploy.data('http://serach-database.form-search.wedeploy.io/'),
-	nodes = document.querySelectorAll("input"),
-	btn = document.querySelector('.fm--we--button--panels');
+'use strict';
+
+var data = WeDeploy.data('http://hello.hellodevfest.wedeploy.io/');
+var nodes = document.querySelectorAll("input");
+var btn = document.querySelector('.fm--we--button--panels');
 
 var formActions = {
 	next: function(e){
